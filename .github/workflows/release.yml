@@ -14,11 +14,10 @@ jobs:
         python-version: 3.8
     - name: Install dependencies
       run: |
-        python -m pip install --upgrade pip
-        pip install pylint
+        pip install -r requirements.txt
     - name: Analysing the code with pylint
       run: |
-        pylint $(git ls-files '*.py')
+        shopt -s globstar && DJANGO_SETTINGS_MODULE=leluchat_auth.settings DJANGO_CONFIGURATION=Dev pylint --load-plugins pylint_django **/*.py
 
   dev-docker-release:
     if: ${{ github.ref_name == 'develop' }}
