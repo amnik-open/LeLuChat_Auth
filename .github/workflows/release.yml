@@ -33,3 +33,10 @@ jobs:
       with:
         push: true
         tags: freeuphub/leluchat_auth:latest
+  dev-docker-test:
+    runs-on: ubuntu-latest
+    container:
+      image: freeuphub/leluchat_auth:latest
+    steps:
+      - name: Run django test
+        run: python /code/manage.py test
