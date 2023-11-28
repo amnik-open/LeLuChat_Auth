@@ -17,7 +17,7 @@ jobs:
         pip install -r requirements.txt
     - name: Analysing the code with pylint
       run: |
-        shopt -s globstar && DJANGO_SETTINGS_MODULE=leluchat_auth.settings DJANGO_CONFIGURATION=Dev pylint --load-plugins pylint_django **/*.py
+        shopt -s globstar && DJANGO_SETTINGS_MODULE=leluchat_auth.settings DJANGO_CONFIGURATION=Dev pylint --fail-under=7 --load-plugins pylint_django **/*.py
 
   dev-docker-release:
     if: ${{ github.ref_name == 'develop' }}

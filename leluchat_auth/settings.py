@@ -143,6 +143,8 @@ class Dev(Configuration):
 
     DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+    AUTH_USER_MODEL = "users.LeluUser"
+
 class Prod(Dev):
     DEBUG = False
     SECRET_KEY = values.SecretValue()
