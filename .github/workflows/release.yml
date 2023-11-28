@@ -4,6 +4,7 @@ on: [push]
 
 jobs:
   lint:
+    if: ${{ github.ref_name == 'develop' }}
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
@@ -20,6 +21,7 @@ jobs:
         pylint $(git ls-files '*.py')
 
   dev-docker-release:
+    if: ${{ github.ref_name == 'develop' }}
     runs-on: ubuntu-latest
     steps:
     - name: Set up Docker Buildx
@@ -37,6 +39,7 @@ jobs:
     needs: lint
 
   dev-docker-test:
+    if: ${{ github.ref_name == 'develop' }}
     runs-on: ubuntu-latest
     container:
       image: freeuphub/leluchat_auth:latest
@@ -44,3 +47,20 @@ jobs:
       - name: Run django test
         run: python /code/manage.py test
     needs: dev-docker-release
+
+  prod-docker-release:
+    if: ${{ github.ref_type == 'tag' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_PASSWORD }}
+      - name: Build and push
+        uses: docker/build-push-action@v5
+        with:
+          push: true
+          tags: freeuphub/leluchat_auth:${{ github.ref_name }}
