@@ -1,6 +1,7 @@
-from django.urls import path, include
-from users.views import RegistrationView, LoginView, ChangePasswordView, UserListView
+"""Specify urls for users app"""
 from rest_framework_simplejwt import views as jwt_views
+from django.urls import path
+from users.views import RegistrationView, LoginView, ChangePasswordView, UserListView
 
 app_name = 'users'
 

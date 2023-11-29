@@ -41,7 +41,8 @@ class Dev(Configuration):
         'django.contrib.sessions',
         'django.contrib.messages',
         'django.contrib.staticfiles',
-        'users'
+        'users',
+        'django_rest_passwordreset'
     ]
 
     REST_FRAMEWORK = {
@@ -156,6 +157,10 @@ class Dev(Configuration):
     DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
     AUTH_USER_MODEL = "users.LeluUser"
+
+    EMAIL_BACKEND = values.Value("django.core.mail.backends.console.EmailBackend")
+
+    FRONTEND_RESET_PASSWORD_URL = values.Value("http://127.0.0.1:5173/reset/")
 
 class Prod(Dev):
     DEBUG = False
