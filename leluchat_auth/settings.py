@@ -41,10 +41,12 @@ class Dev(Configuration):
         'django.contrib.sessions',
         'django.contrib.messages',
         'django.contrib.staticfiles',
+        'rest_framework',
         'users',
         'django_rest_passwordreset',
         'django_celery_results',
-        'drf_yasg'
+        'drf_yasg',
+        'debug_toolbar'
     ]
 
     SWAGGER_SETTINGS = {
@@ -91,6 +93,7 @@ class Dev(Configuration):
     }
 
     MIDDLEWARE = [
+        'debug_toolbar.middleware.DebugToolbarMiddleware',
         'django.middleware.security.SecurityMiddleware',
         'django.contrib.sessions.middleware.SessionMiddleware',
         'django.middleware.common.CommonMiddleware',
@@ -99,6 +102,8 @@ class Dev(Configuration):
         'django.contrib.messages.middleware.MessageMiddleware',
         'django.middleware.clickjacking.XFrameOptionsMiddleware',
     ]
+
+    INTERNAL_IPS = values.ListValue(["172.23.0.1"])
 
     ROOT_URLCONF = 'leluchat_auth.urls'
 
