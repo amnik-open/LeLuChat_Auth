@@ -7,3 +7,21 @@ services:
       - .:/code
     ports:
       - "8000:8000"
+  redis:
+    image: 'redis:latest'
+    ports:
+      - '6379:6379'
+    volumes:
+      - './redisdata:/data'
+  celery:
+    build: .
+    command: celery -A leluchat_auth worker -l INFO
+    volumes:
+      - .:/code
+    environment:
+      - POSTGRES_NAME=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    depends_on:
+      - auth
+      - redis

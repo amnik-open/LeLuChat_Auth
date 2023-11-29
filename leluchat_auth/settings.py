@@ -42,8 +42,12 @@ class Dev(Configuration):
         'django.contrib.messages',
         'django.contrib.staticfiles',
         'users',
-        'django_rest_passwordreset'
+        'django_rest_passwordreset',
+        'django_celery_results'
     ]
+
+    CELERY_RESULT_BACKEND = "django-db"
+    CELERY_BROKER_URL = values.Value("redis://redis:6379/0")
 
     REST_FRAMEWORK = {
         'DEFAULT_AUTHENTICATION_CLASSES': [
