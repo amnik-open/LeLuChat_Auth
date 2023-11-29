@@ -43,8 +43,16 @@ class Dev(Configuration):
         'django.contrib.staticfiles',
         'users',
         'django_rest_passwordreset',
-        'django_celery_results'
+        'django_celery_results',
+        'drf_yasg'
     ]
+
+    SWAGGER_SETTINGS = {
+        "SECURITY_DEFINITIONS": {
+            "Token": {"type": "apiKey", "name": "Authorization", "in": "header"},
+            "Basic": {"type": "basic"},
+        }
+    }
 
     CELERY_RESULT_BACKEND = "django-db"
     CELERY_BROKER_URL = values.Value("redis://redis:6379/0")

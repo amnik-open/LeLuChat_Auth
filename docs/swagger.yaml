@@ -1,0 +1,194 @@
+swagger: '2.0'
+info:
+  title: LeLuChat API
+  description: API for LeLuChat Engine
+  version: v1
+host: 127.0.0.1:8000
+schemes:
+- http
+basePath: /v1/accounts
+consumes:
+- application/json
+produces:
+- application/json
+securityDefinitions:
+  Token:
+    type: apiKey
+    name: Authorization
+    in: header
+  Basic:
+    type: basic
+security:
+- Basic: []
+- Token: []
+paths:
+  /change-password/:
+    post:
+      operationId: change-password_create
+      description: API to change password for LeluUser
+      parameters: []
+      responses:
+        '201':
+          description: ''
+      tags:
+      - change-password
+    parameters: []
+  /login/:
+    post:
+      operationId: login_create
+      description: API for loging users
+      parameters: []
+      responses:
+        '201':
+          description: ''
+      tags:
+      - login
+    parameters: []
+  /password_reset/:
+    post:
+      operationId: password_reset_create
+      summary: An Api View which provides a method to request a password reset token
+        based on an e-mail address
+      description: Sends a signal reset_password_token_created when a reset token
+        was created
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/Email'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/Email'
+      tags:
+      - password_reset
+    parameters: []
+  /password_reset/confirm/:
+    post:
+      operationId: password_reset_confirm_create
+      description: An Api View which provides a method to reset a password based on
+        a unique token
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/PasswordToken'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/PasswordToken'
+      tags:
+      - password_reset
+    parameters: []
+  /password_reset/validate_token/:
+    post:
+      operationId: password_reset_validate_token_create
+      description: An Api View which provides a method to verify that a token is valid
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/ResetToken'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/ResetToken'
+      tags:
+      - password_reset
+    parameters: []
+  /register/:
+    post:
+      operationId: register_create
+      description: API for registering users
+      parameters: []
+      responses:
+        '201':
+          description: ''
+      tags:
+      - register
+    parameters: []
+  /token-refresh/:
+    post:
+      operationId: token-refresh_create
+      description: |-
+        Takes a refresh type JSON web token and returns an access type JSON web
+        token if the refresh token is valid.
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/TokenRefresh'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/TokenRefresh'
+      tags:
+      - token-refresh
+    parameters: []
+  /users/:
+    get:
+      operationId: users_list
+      description: API for getting info about authenticated user
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags:
+      - users
+    parameters: []
+definitions:
+  Email:
+    required:
+    - email
+    type: object
+    properties:
+      email:
+        title: Email
+        type: string
+        format: email
+        minLength: 1
+  PasswordToken:
+    required:
+    - password
+    - token
+    type: object
+    properties:
+      password:
+        title: Password
+        type: string
+        minLength: 1
+      token:
+        title: Token
+        type: string
+        minLength: 1
+  ResetToken:
+    required:
+    - token
+    type: object
+    properties:
+      token:
+        title: Token
+        type: string
+        minLength: 1
+  TokenRefresh:
+    required:
+    - refresh
+    type: object
+    properties:
+      refresh:
+        title: Refresh
+        type: string
+        minLength: 1
+      access:
+        title: Access
+        type: string
+        readOnly: true
+        minLength: 1
