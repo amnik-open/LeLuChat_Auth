@@ -4,8 +4,11 @@ from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework_simplejwt.authentication import JWTAuthentication
 from users.utils import get_tokens_for_user
-from users.serializers import RegistrationSerializer, PasswordChangeSerializer, UserSerializer
+from users.serializers import RegistrationSerializer, PasswordChangeSerializer, LeluUserSerializer, WebsiteUserSerializer
+from users.models import WebsiteUser, LeluUser
+from users.website_user_authentication import WebsiteUserTokenAuthentication
 
 
 class RegistrationView(APIView):
@@ -50,8 +53,33 @@ class ChangePasswordView(APIView):
 
 class UserListView(APIView):
     """API for getting info about authenticated user"""
+
     permission_classes = [IsAuthenticated, ]
 
     def get(self, request):
-        serializer = UserSerializer(request.user)
+        serializer = LeluUserSerializer(request.user)
         return Response(serializer.data)
+
+class WebsiteUserListView(APIView):
+    """API for WebsiteUser model"""
+
+    def post(self, request):
+        serializer = WebsiteUserSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class RemoteAuthentication(APIView):
+    """API to check Authorization token for authentication"""
+    authentication_classes = [JWTAuthentication, WebsiteUserTokenAuthentication]
+
+    def get(self, request):
+        if isinstance(request.user, LeluUser):
+            serializer = LeluUserSerializer(request.user)
+            return Response(serializer.data)
+        if isinstance(request.user, WebsiteUser):
+            serializer = WebsiteUserSerializer(request.user)
+            return Response(serializer.data)
+        return Response({'msg': 'Invalid Credentials'}, status=status.HTTP_401_UNAUTHORIZED)

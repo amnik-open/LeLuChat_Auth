@@ -1,6 +1,6 @@
 """Define serializers for different models classes"""
 from rest_framework import serializers
-from users.models import LeluUser
+from users.models import LeluUser, WebsiteUser
 
 
 class RegistrationSerializer(serializers.ModelSerializer):
@@ -31,8 +31,26 @@ class PasswordChangeSerializer(serializers.Serializer):
         return value
 
 
-class UserSerializer(serializers.ModelSerializer):
+class LeluUserSerializer(serializers.ModelSerializer):
     """Serializer for Leluuser model"""
+
+    uuid = serializers.UUIDField(read_only=True)
+    type = serializers.ReadOnlyField(default='LeluUser')
+
     class Meta:
         model = LeluUser
-        fields = ['email', 'name']
+        fields = ['uuid', 'email', 'name', 'type']
+
+class WebsiteUserSerializer(serializers.ModelSerializer):
+    """Serializer for WebsiteUser model"""
+
+    uuid = serializers.UUIDField(read_only=True)
+    type = serializers.ReadOnlyField(default='WebsiteUser', read_only=True)
+    auth_token = serializers.StringRelatedField(read_only=True)
+
+    class Meta:
+        model = WebsiteUser
+        fields = ['uuid', 'type', 'auth_token']
+
+    def create(self, validated_data):
+        return WebsiteUser.objects.create()

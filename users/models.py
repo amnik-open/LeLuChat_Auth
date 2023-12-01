@@ -1,7 +1,9 @@
 """This file declare database schema"""
+import uuid
 from django.utils.translation import gettext_lazy as _
 from django.db import models
 from django.contrib.auth.models import AbstractUser, UserManager
+from rest_framework.authtoken.models import Token
 
 
 class LeluUserManager(UserManager):
@@ -32,6 +34,7 @@ class LeluUserManager(UserManager):
 class LeluUser(AbstractUser):
     """LeluUser specify custom user model to use as AUTH_USER_MODEL"""
 
+    uuid = models.UUIDField(unique=True, default=uuid.uuid4)
     username = None
     email = models.EmailField(_("email address"), unique=True)
     name = models.CharField(max_length=200)
@@ -40,3 +43,38 @@ class LeluUser(AbstractUser):
     REQUIRED_FIELDS = []
     def __str__(self):
         return self.email
+
+
+class WebsiteUserManager(models.Manager):
+    """Manager for WebsiteUser model"""
+    def create(self):
+        websiteuser = WebsiteUser()
+        websiteuser.save()
+        websiteusertoken = WebsiteUserToken(user=websiteuser)
+        websiteusertoken.save()
+        return websiteuser
+
+
+class WebsiteUser(models.Model):
+    """Define model of website users"""
+
+    uuid = models.UUIDField(unique=True, default=uuid.uuid4)
+    is_active = models.BooleanField(default=True)
+
+    @property
+    def is_authenticated(self):
+        return True
+
+    objects = WebsiteUserManager()
+
+    def __str__(self):
+        return self.uuid
+
+
+class WebsiteUserToken(Token):
+    """Define Token for WebsiteUsers"""
+    user = models.OneToOneField(WebsiteUser, on_delete=models.CASCADE, verbose_name=_("User"),
+                                related_name='auth_token')
+
+    def __str__(self):
+        return self.key

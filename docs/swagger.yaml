@@ -113,6 +113,17 @@ paths:
       tags:
       - register
     parameters: []
+  /remote-auth/:
+    get:
+      operationId: remote-auth_list
+      description: API to check Authorization token for authentication
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags:
+      - remote-auth
+    parameters: []
   /token-refresh/:
     post:
       operationId: token-refresh_create
@@ -143,6 +154,17 @@ paths:
           description: ''
       tags:
       - users
+    parameters: []
+  /web-user-register/:
+    post:
+      operationId: web-user-register_create
+      description: API for WebsiteUser model
+      parameters: []
+      responses:
+        '201':
+          description: ''
+      tags:
+      - web-user-register
     parameters: []
 definitions:
   Email:
