@@ -1,6 +1,8 @@
 """Connect to rabbitmq"""
+import pika
+import logging
+import time
 from django.conf import settings
-import pika, logging, time
 
 log = logging.getLogger(__name__)
 
@@ -14,13 +16,15 @@ def rabbit_connect():
     connection = None
     exc = None
     while retry > 0:
+        log.info("Try connecting to rabbitmq")
         try:
             connection = pika.BlockingConnection(parameters)
+            break
         except Exception as e:
             log.exception(e)
             exc = e
-        time.sleep(wait)
-        log.info("Retry connecting to rabbitmq")
+        if exc:
+            time.sleep(wait)
         retry -= 1
     if not connection:
         raise exc

@@ -1,8 +1,9 @@
 """RPC server for membership"""
-import pika, os, logging, threading, json
+import pika
+import logging
+import threading
 from rpc.channel_connection import rabbit_connect
 from users.models import LeluUser
-from users.serializers import WebsiteUserSerializer
 
 log = logging.getLogger(__name__)
 

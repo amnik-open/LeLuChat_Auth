@@ -1,5 +1,8 @@
 """RPC server for registering WebsiteUser"""
-import pika, os, logging, threading, json
+import pika
+import logging
+import threading
+import json
 from rpc.channel_connection import rabbit_connect
 from users.models import WebsiteUser
 from users.serializers import WebsiteUserSerializer

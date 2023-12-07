@@ -6,7 +6,8 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from users.utils import get_tokens_for_user
-from users.serializers import RegistrationSerializer, PasswordChangeSerializer, LeluUserSerializer, WebsiteUserSerializer
+from users.serializers import RegistrationSerializer, PasswordChangeSerializer, LeluUserSerializer
+from users.serializers import WebsiteUserSerializer
 from users.models import WebsiteUser, LeluUser
 from users.website_user_authentication import WebsiteUserTokenAuthentication
 
