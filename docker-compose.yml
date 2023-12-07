@@ -1,6 +1,6 @@
 networks:
-    auth:
-      name: auth
+    leluchat:
+      name: leluchat
 services:
   redis:
     image: 'redis:latest'
@@ -9,7 +9,7 @@ services:
     volumes:
       - './redisdata:/data'
     networks:
-      - auth
+      - leluchat
   rabbitmq:
     container_name: 'rabbitmq'
     image: 'rabbitmq:latest'
@@ -19,7 +19,7 @@ services:
       - RABBITMQ_DEFAULT_USER=user
       - RABBITMQ_DEFAULT_PASS=password
     networks:
-      - auth
+      - leluchat
   auth:
     build: .
     command: python manage.py runserver 0.0.0.0:8000
@@ -31,6 +31,21 @@ services:
     ports:
       - "8000:8000"
     networks:
-      - auth
+      - leluchat
     depends_on:
       - rabbitmq
+  celery:
+    build: .
+    command: celery -A leluchat_auth worker -l INFO
+    volumes:
+      - .:/code
+    environment:
+      - DJANGO_RPC_SERVERS_START=FALSE
+      - POSTGRES_NAME=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    networks:
+      - leluchat
+    depends_on:
+      - auth
+      - redis
