@@ -47,8 +47,8 @@ class LeluUser(AbstractUser):
 
 class WebsiteUserManager(models.Manager):
     """Manager for WebsiteUser model"""
-    def create(self):
-        websiteuser = WebsiteUser()
+    def create(self, name):
+        websiteuser = WebsiteUser(name=name)
         websiteuser.save()
         websiteusertoken = WebsiteUserToken(user=websiteuser)
         websiteusertoken.save()
@@ -59,6 +59,7 @@ class WebsiteUser(models.Model):
     """Define model of website users"""
 
     uuid = models.UUIDField(unique=True, default=uuid.uuid4)
+    name = models.CharField(max_length=200)
     is_active = models.BooleanField(default=True)
 
     @property

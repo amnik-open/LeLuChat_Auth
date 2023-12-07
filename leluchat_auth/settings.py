@@ -46,7 +46,8 @@ class Dev(Configuration):
         'django_rest_passwordreset',
         'django_celery_results',
         'drf_yasg',
-        'debug_toolbar'
+        'debug_toolbar',
+        'rpc'
     ]
 
     SWAGGER_SETTINGS = {
@@ -88,7 +89,7 @@ class Dev(Configuration):
         },
         "root": {
             "handlers": ["console"],
-            "level": "DEBUG",
+            "level": "INFO",
         },
     }
 
@@ -178,6 +179,21 @@ class Dev(Configuration):
     EMAIL_BACKEND = values.Value("django.core.mail.backends.console.EmailBackend")
 
     FRONTEND_RESET_PASSWORD_URL = values.Value("http://127.0.0.1:5173/reset/")
+
+    RABBITMQ = values.DictValue({
+        'default': {
+            'HOST': 'rabbitmq',
+            'PORT': '5672',
+            'VIRTUAL_HOST': '/',
+            'USER': 'user',
+            'PASSWORD': 'password',
+            'retry': 5,
+            'wait': 2,
+        }
+    })
+
+    RPC_SERVERS_START = values.BooleanValue(False)
+
 
 class Prod(Dev):
     DEBUG = False

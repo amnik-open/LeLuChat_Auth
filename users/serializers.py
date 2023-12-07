@@ -50,7 +50,7 @@ class WebsiteUserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = WebsiteUser
-        fields = ['uuid', 'type', 'auth_token']
+        fields = ['uuid', 'name', 'type', 'auth_token']
 
     def create(self, validated_data):
         return WebsiteUser.objects.create()
